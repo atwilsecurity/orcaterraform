@@ -1,0 +1,18 @@
+trigger:
+  - main
+
+variables:
+- name: PROJECT_KEY # Set the desired project to run the cli scanning with
+  value: atwilsecurity-Orca_IaC
+
+pool:
+  vmImage: "ubuntu-latest"
+
+steps:
+  - script: | 
+      apt update && apt install -y curl
+      curl -sfL 'https://raw.githubusercontent.com/orcasecurity/orca-cli/main/install.sh' | bash #download installation script
+      orca-cli -p ${PROJECT_KEY} iac scan --path ${PWD}  # Run Orca CLI scan against your IaC code     
+    displayName: Orca IaC Security scan 
+    env:
+     ORCA_SECURITY_API_TOKEN: $(CSPM_IAC_SCANS)
